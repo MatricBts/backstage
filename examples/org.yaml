@@ -1,0 +1,99 @@
+# DEVS-----------------------------------------------
+# GRUPO PAI
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: developers
+spec:
+  type: team
+  children: [team-a, team-b]
+---
+
+# GRUPOS FILHOS
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: team-a
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: team-b
+spec:
+  type: team
+  children: []
+---
+
+
+# USUARIOS 
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: carlos
+spec:
+  memberOf: [team-a]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: roberto
+spec:
+  memberOf: [team-a]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: neide
+spec:
+  memberOf: [team-a]
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: claudia
+spec:
+  memberOf: [team-b]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: laura
+spec:
+  memberOf: [team-b]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: vitor
+spec:
+  memberOf: [team-b]
+# ---------------------------------------------------
+
+
+# DEVOPS --------------------------------------------
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: devops
+spec:
+  type: team
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: julio.leite
+spec:
+  memberOf: [devops]
+---
+
+
+

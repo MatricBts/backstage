@@ -1,0 +1,512 @@
+# PROJETO POC ================================================
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: sysmap
+spec:
+  owner: devops
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sysmap-poc
+  description: apresentação do backstage
+  tags:
+    - sysmap
+    - poc
+    - backstage
+  links:
+    - url: https://www.youtube.com/watch?v=LLcYfM-AJ7w&ab_channel=SysMapSolutions
+      title: About Us
+      icon: dashboard
+    - url: https://github.com/nb-sysmap
+      title: github repo
+      icon: github
+    - url: https://www.sysmap.com.br/
+      title: Website
+      icon: website
+spec:
+  type: website
+  lifecycle: experimental
+  owner: devops
+  system: sysmap
+  providesApis: [sysmap-api]
+---
+
+
+
+
+# PROJETO PAYMENT=================================================================
+
+# SYSTEM ====================================
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: sysmapyarn
+spec:
+  owner: developers
+---
+
+# COMPONENT =================================
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sysmap-entrega
+  description: sistema de execução de pagamento
+  tags:
+    - sysmap
+    - poc
+    - backstage
+  links:
+    - url: https://www.youtube.com/watch?v=LLcYfM-AJ7w&ab_channel=SysMapSolutions
+      title: About Us
+      icon: dashboard
+    - url: https://github.com/nb-sysmap
+      title: github repo
+      icon: github
+    - url: https://www.sysmap.com.br/
+      title: Website
+      icon: website
+spec:
+  type: website
+  lifecycle: experimental
+  owner: developers
+  system: sysmap
+  providesApis: [users, cep]
+---
+
+# API'S ===========================================
+
+# USERS
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: users
+  description: Api para controle de usuarios, efetuando os casos de uso necessarios em todo o processo (create, read, update e delete)
+  links:
+    - url: https://swagger.io/
+      title: swagger documentations
+      icon: swagger
+    - url: https://github.com/nb-sysmap
+      title: api repo
+      icon: github 
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: team-a
+  system: sysmap
+  definition: |
+    openapi: "3.0.0"
+    info:
+      version: 1.0.0
+      title: Swagger Payment
+      license:
+        name: MIT
+    paths:
+      /users:
+        get:
+          summary: List all users
+          operationId: listUsers
+          tags:
+            - user
+          parameters:
+            - name: limit
+              in: query
+              description: How many items to return at one time (max 100)
+              required: false
+              schema:
+                type: integer
+                format: int32
+          responses:
+            '200':
+              description: A paged array of pets
+              headers:
+                x-next:
+                  description: A link to the next page of responses
+                  schema:
+                    type: string
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/User"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+        post:
+          summary: Create a user
+          operationId: createUsers
+          tags:
+            - user
+          responses:
+            '201':
+              description: Null response
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+      /users/{userId}:
+        get:
+          summary: Info for a specific user
+          operationId: showUserById
+          tags:
+            - users
+          parameters:
+            - name: userId
+              in: path
+              required: true
+              description: The id of the user to retrieve
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Expected response to a valid request
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/User"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    components:
+      schemas:
+        User:
+          type: object
+          required:
+            - id
+            - name
+          properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            tag:
+              type: string
+        Error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: integer
+              format: int32
+            message:
+              type: string
+---
+---
+
+# PAYMENT
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: cep
+  description: Api utilizada para criação de ceps para efetuar as entregas
+  links:
+    - url: https://swagger.io/
+      title: swagger documentations
+      icon: swagger
+    - url: https://github.com/nb-sysmap
+      title: api repo
+      icon: github 
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: team-b
+  system: sysmap
+  definition: |
+    openapi: "3.0.0"
+    info:
+      version: 1.0.0
+      title: Swagger Payment
+      license:
+        name: MIT
+    paths:
+      /cep:
+        get:
+          summary: List all cep
+          operationId: listCep
+          tags:
+            - cep
+          parameters:
+            - name: limit
+              in: query
+              description: How many items to return at one time (max 100)
+              required: false
+              schema:
+                type: integer
+                format: int32
+          responses:
+            '200':
+              description: A paged array of pets
+              headers:
+                x-next:
+                  description: A link to the next page of responses
+                  schema:
+                    type: string
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Cep"
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+        post:
+          summary: Create a cep
+          operationId: createCep
+          tags:
+            - cep
+          responses:
+            '201':
+              description: Null response
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    components:
+      schemas:
+        Cep:
+          type: object
+          required:
+            - endereco
+            - numero
+            - bairro
+            - estado
+            - pais
+          properties:
+            endereco:
+              type: string
+            numero:
+              type: integer
+              format: int64
+            bairro:
+              type: string
+            estado:
+              type: string
+            pais:
+              type: string
+        Error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: integer
+              format: int32
+            message:
+              type: string
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # PROJETO PETSTORE ==========================================================================
+
+# # COMPONENT =================================
+# apiVersion: backstage.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: sysmap-petstore
+#   description: controle do petshop
+#   tags:
+#     - sysmap
+#     - poc
+#     - backstage
+#   links:
+#     - url: https://www.youtube.com/watch?v=LLcYfM-AJ7w&ab_channel=SysMapSolutions
+#       title: About Us
+#       icon: dashboard
+#     - url: https://github.com/nb-sysmap
+#       title: github repo
+#       icon: github
+#     - url: https://www.sysmap.com.br/
+#       title: Website
+#       icon: website
+# spec:
+#   type: website
+#   lifecycle: experimental
+#   owner: developers
+#   system: sysmap
+#   providesApis: [petstore]
+# ---
+
+# # API'S ===========================================
+# apiVersion: backstage.io/v1alpha1
+# kind: API
+# metadata:
+#   name: petstore
+#   description: The petstore API
+#   tags:
+#     - store
+#     - rest
+#   links:
+#     - url: https://github.com/swagger-api/swagger-petstore
+#       title: GitHub Repo
+#       icon: github
+#     - url: https://github.com/OAI/OpenAPI-Specification/blob/master/examples/v3.0/petstore.yaml
+#       title: API Spec
+#       icon: code
+# spec:
+#   type: openapi
+#   lifecycle: experimental
+#   owner: team-c
+#   definition: |
+#     openapi: "3.0.0"
+#     info:
+#       version: 1.0.0
+#       title: Swagger Petstore
+#       license:
+#         name: MIT
+#     servers:
+#       - url: http://petstore.swagger.io/v1
+#     paths:
+#       /pets:
+#         get:
+#           summary: List all pets
+#           operationId: listPets
+#           tags:
+#             - pets
+#           parameters:
+#             - name: limit
+#               in: query
+#               description: How many items to return at one time (max 100)
+#               required: false
+#               schema:
+#                 type: integer
+#                 format: int32
+#           responses:
+#             '200':
+#               description: A paged array of pets
+#               headers:
+#                 x-next:
+#                   description: A link to the next page of responses
+#                   schema:
+#                     type: string
+#               content:
+#                 application/json:
+#                   schema:
+#                     $ref: "#/components/schemas/Pets"
+#             default:
+#               description: unexpected error
+#               content:
+#                 application/json:
+#                   schema:
+#                     $ref: "#/components/schemas/Error"
+#         post:
+#           summary: Create a pet
+#           operationId: createPets
+#           tags:
+#             - pets
+#           responses:
+#             '201':
+#               description: Null response
+#             default:
+#               description: unexpected error
+#               content:
+#                 application/json:
+#                   schema:
+#                     $ref: "#/components/schemas/Error"
+#       /pets/{petId}:
+#         get:
+#           summary: Info for a specific pet
+#           operationId: showPetById
+#           tags:
+#             - pets
+#           parameters:
+#             - name: petId
+#               in: path
+#               required: true
+#               description: The id of the pet to retrieve
+#               schema:
+#                 type: string
+#           responses:
+#             '200':
+#               description: Expected response to a valid request
+#               content:
+#                 application/json:
+#                   schema:
+#                     $ref: "#/components/schemas/Pet"
+#             default:
+#               description: unexpected error
+#               content:
+#                 application/json:
+#                   schema:
+#                     $ref: "#/components/schemas/Error"
+#     components:
+#       schemas:
+#         Pet:
+#           type: object
+#           required:
+#             - id
+#             - name
+#           properties:
+#             id:
+#               type: integer
+#               format: int64
+#             name:
+#               type: string
+#             tag:
+#               type: string
+#         Error:
+#           type: object
+#           required:
+#             - code
+#             - message
+#           properties:
+#             code:
+#               type: integer
+#               format: int32
+#             message:
+#               type: string
