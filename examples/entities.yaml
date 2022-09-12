@@ -1,13 +1,13 @@
 # PROJETO POC ================================================
 
----
-apiVersion: backstage.io/v1alpha1
-kind: System
-metadata:
-  name: sysmap
-spec:
-  owner: devops
----
+# ---
+# apiVersion: backstage.io/v1alpha1
+# kind: System
+# metadata:
+#   name: sysmap
+# spec:
+#   owner: devops
+# ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -45,15 +45,17 @@ spec:
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
-  name: sysmapyarn
+  name: sysmap
 spec:
-  owner: developers
+  owner: devops
 ---
 
 # COMPONENT =================================
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
+  annotations:
+    circleci.com/project-slug: https://github.com/MatricBts/backstage.git
   name: sysmap-entrega
   description: sistema de execução de pagamento
   tags:
@@ -71,7 +73,7 @@ metadata:
       title: Website
       icon: website
 spec:
-  type: website
+  type: service
   lifecycle: experimental
   owner: developers
   system: sysmap

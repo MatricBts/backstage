@@ -48,9 +48,9 @@ integrations:
 
 proxy:
   '/circleci/api':
-    target: https://circleci.com/api/v1.1
+    target: https://app.circleci.com/pipelines/github/MatricBts/backstage
     headers:
-      Circle-Token: ${CIRCLECI_AUTH_TOKEN}
+      Circle-Token: 2f72de83f69deb3fcac77a6465c2d99f98024c88
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
